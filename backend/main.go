@@ -169,6 +169,7 @@ func main() {
 		log.Println("No .env file found")
 	}
 
+	port := os.Getenv("PORT")
 	domain := os.Getenv("DOMAIN")
 	dsn := os.Getenv("DATABASE_URL")
 
@@ -283,5 +284,5 @@ func main() {
 		w.Write([]byte("method is not valid"))
 	})
 
-	http.ListenAndServe(":8080", r)
+	http.ListenAndServe(":"+port, r)
 }
