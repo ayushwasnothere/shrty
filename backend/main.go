@@ -18,7 +18,6 @@ import (
 	"github.com/ayushwasnothere/shrty/backend/b62"
 	"github.com/ayushwasnothere/shrty/backend/db"
 	"github.com/go-chi/chi"
-	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
 )
 
@@ -131,11 +130,6 @@ func verifyTurnstile(token string) (bool, error) {
 	_ = writer.WriteField("secret", secret)
 	_ = writer.WriteField("response", token)
 
-	// OPTIONAL — only include in prod
-	// if remoteIP != "" {
-	// 	_ = writer.WriteField("remoteip", remoteIP)
-	// }
-
 	writer.Close()
 
 	req, err := http.NewRequest(
@@ -185,16 +179,6 @@ func main() {
 	}
 
 	r := chi.NewRouter()
-	r.Use(cors.Handler(cors.Options{
-		AllowedOrigins: []string{
-			"http://localhost:3000",
-			"http://localhost:5173",
-		},
-		AllowedMethods:   []string{"GET", "POST", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type"},
-		AllowCredentials: false,
-		MaxAge:           300,
-	}))
 
 	r.Post("/api/shorten", func(w http.ResponseWriter, r *http.Request) {
 		bodyBytes, err := io.ReadAll(r.Body)
