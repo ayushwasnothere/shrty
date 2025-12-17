@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"io"
 	"log"
 	"mime/multipart"
@@ -234,7 +235,7 @@ func main() {
 		b62Id := b62.Encode(id)
 
 		response := map[string]string{
-			"shortened_url": domain + b62Id,
+			"shortened_url": fmt.Sprintf("%s/%s", domain, b62Id),
 			"original_url":  jsonBody.URL,
 		}
 		w.Header().Set("Content-Type", "application/json")
@@ -284,5 +285,6 @@ func main() {
 		w.Write([]byte("method is not valid"))
 	})
 
+	log.Default().Printf("Server is running on port %s", port)
 	http.ListenAndServe(":"+port, r)
 }
